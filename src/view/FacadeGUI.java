@@ -17,6 +17,7 @@ public class FacadeGUI {
 	private SideOptions sideOptions = new SideOptions();
 	private SainEditPage sainEditScreen = new SainEditPage();
 	private AddStudentPage addStudentScreen = new AddStudentPage();
+	private WhatIfScreen whatIfScreen = new WhatIfScreen();
 	private Label popUpLabel = new Label();
 	Pane pane = new Pane();
 	Button continueButton;
@@ -103,7 +104,15 @@ public class FacadeGUI {
 		sainScreen.update.setOnAction(e ->{
 			controller.updateSainClicked();
 		});
+		
+		sainScreen.b1.setOnAction(e ->{
+			controller.whatIfClicked();
+		});
 		view.setNewView(pane);
+	}
+	public void setWhatIfView(){
+		pane.getChildren().clear();
+		pane.getChildren().add(whatIfScreen.getMyGrid());
 	}
 	public void setAddStudentView(){
 		//searchScreen.getMyGrid().setVisible(false);
@@ -137,6 +146,9 @@ public class FacadeGUI {
 	}
 	public SearchStudentScreen getSearchScreen(){
 		return searchScreen;
+	}
+	public WhatIfScreen getWhatIfScreen(){
+		return whatIfScreen;
 	}
 	
 	public Pane getPane(){

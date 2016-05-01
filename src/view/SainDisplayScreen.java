@@ -235,7 +235,7 @@ public class SainDisplayScreen {
 		
 		
 		
-		grid.add(b1, 2, 2);
+		grid.add(b1, 43, 2);
 		grid.add(title, 24, 0);
 		
 		

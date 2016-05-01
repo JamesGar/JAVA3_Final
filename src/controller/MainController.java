@@ -97,7 +97,8 @@ public class MainController {
 		majorBag.getMajor(4).addToMajor(courseBag.getCourse(24));
 		majorBag.getMajor(4).addToMajor(courseBag.getCourse(25));
 		majorBag.getMajor(4).addToMajor(courseBag.getCourse(26));
-
+		
+	
 	
 		
 		
@@ -292,6 +293,14 @@ public class MainController {
 	}
 	public void addStudentViewClicked(){
 		facade.setAddStudentView();
+	}
+	public void whatIfClicked(){
+		//adds majors to what-if? options:
+		//temp: cant have add to comboBox everytime what if is clicked..
+				facade.getWhatIfScreen().addOptions(majorBag.getMajor(0).getMyMajor(), majorBag.getMajor(1).getMyMajor(), majorBag.getMajor(2).getMyMajor()
+						, majorBag.getMajor(3).getMyMajor(), majorBag.getMajor(4).getMyMajor());
+
+		facade.setWhatIfView();
 	}
 	public void addStudentClicked(){
 		boolean canContinue = true;
