@@ -94,9 +94,15 @@ public class FacadeGUI {
 		searchScreen.showViewSain();
 	}
 	public void setSainView(Student forThisStudent){
+		
 		sainScreen.setInfo(forThisStudent);
 		pane.getChildren().clear();
 		pane.getChildren().add(sainScreen.getMyGrid());
+		pane.getChildren().add(whatIfScreen.getMyGrid());
+		
+		whatIfScreen.hide();
+
+			
 		//"Update" button visible if user is admin:
 		if(view.getStaffValue() == 2)
 			sainScreen.update.setVisible(true);
@@ -111,13 +117,15 @@ public class FacadeGUI {
 		view.setNewView(pane);
 	}
 	public void setWhatIfView(){
-		pane.getChildren().clear();
-		pane.getChildren().add(whatIfScreen.getMyGrid());
+		//pane.getChildren().clear();
+		sainScreen.hide();
+		whatIfScreen.show();
+		
+		whatIfScreen.newSainButton.setOnAction(e ->{
+			controller.newSainButtonClicked();
+		});
 	}
 	public void setAddStudentView(){
-		//searchScreen.getMyGrid().setVisible(false);
-		//pane.getChildren().clear();
-		//pane.getChildren().add(addStudentScreen.getMyGrid());
 		searchScreen.hide();
 		addStudentScreen.show();
 		addStudentScreen.add.setOnAction(e ->{
@@ -150,6 +158,9 @@ public class FacadeGUI {
 	public WhatIfScreen getWhatIfScreen(){
 		return whatIfScreen;
 	}
+	public SainDisplayScreen getSainScreen(){
+		return sainScreen;
+	}
 	
 	public Pane getPane(){
 		return pane;
@@ -160,10 +171,12 @@ public class FacadeGUI {
 	}
 
 	public void makeDoesNotExistWindow(){
-		popUpLabel.setText("Could not find account");
-		Scene popUp = new Scene(popUpLabel,200,200);
+		if(popUp1.getRoot().equals("Could not find account") == false){
+			popUpLabel.setText("Could not find account");
+			popUp1.setRoot(popUpLabel);
+		}
 		Stage popUpStage = new Stage();
-		view.makeDoesNotExistWindow(popUpStage,popUp);
+		view.makeDoesNotExistWindow(popUpStage,popUp1);
 	}
 	public void makeWrongMajorInputWindow(){
 		if(popUp1.getRoot().equals("Not a valid input for Major ID") == false){

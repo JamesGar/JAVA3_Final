@@ -1,12 +1,14 @@
 package controller;
 
+import java.util.ArrayList;
+
 import model.Account;
 import model.Address;
 import model.Admin;
+import model.Course;
 import model.CourseBag;
 import model.Enrollment;
 import model.Faculty;
-import model.LoginDataStore;
 import model.Major;
 import model.MajorBag;
 import model.StaffBag;
@@ -23,6 +25,8 @@ public class MainController {
 	FacadeGUI facade;
 	MajorBag majorBag = new MajorBag();
 	CourseBag courseBag = new CourseBag();
+	private Student whatIfStudent;
+	private Student searchedStudent;
 	
 	//may need to add view in brackets
 	public MainController(){
@@ -249,10 +253,10 @@ public class MainController {
 		//int studentId;
 		
 		if(accountValue == 0){
-			Student thisStudent = studentBag.verify(userName, passWord);
+			searchedStudent = studentBag.verify(userName, passWord);
 			//System.out.println(thisStudent.toString());
-				if(thisStudent != null){
-					facade.setSainView(thisStudent);
+				if(searchedStudent != null){
+					facade.setSainView(searchedStudent);
 				}
 				else
 					facade.makeDoesNotExistWindow();
@@ -265,7 +269,7 @@ public class MainController {
 			System.out.println("Something went wrong with account values" + accountValue);
 		
 	}
-	Student searchedStudent;
+	
 	public void searchClicked(int i){
 		searchedStudent = null;
 		searchedStudent = (Student) studentBag.search(i);
@@ -296,12 +300,79 @@ public class MainController {
 	}
 	public void whatIfClicked(){
 		//adds majors to what-if? options:
-		//temp: cant have add to comboBox everytime what if is clicked..
-				facade.getWhatIfScreen().addOptions(majorBag.getMajor(0).getMyMajor(), majorBag.getMajor(1).getMyMajor(), majorBag.getMajor(2).getMyMajor()
-						, majorBag.getMajor(3).getMyMajor(), majorBag.getMajor(4).getMyMajor());
-
+		facade.getWhatIfScreen().addOptions(majorBag.getMajor(0).getMyMajor(), majorBag.getMajor(1).getMyMajor(), majorBag.getMajor(2).getMyMajor()
+						                    , majorBag.getMajor(3).getMyMajor(), majorBag.getMajor(4).getMyMajor());
 		facade.setWhatIfView();
 	}
+	
+	public void newSainButtonClicked(){
+		whatIfStudent = searchedStudent;
+		for(int j = 0; j<majorBag.getSize();j++){
+			if(facade.getWhatIfScreen().getBoxInfo().equals(majorBag.getMajor(j).getMyMajor())){
+				whatIfStudent.setMajorID(j);
+				whatIfStudent.getEnrollmentInfo().setMyMajor(majorBag.getMajor(j));
+				System.out.println();
+				break;
+			}
+		}
+		// V Goes through all courses needed for new major, and swaps around which of the 'what if student's courses are in
+		// "Other Taken" textArea and "Required Taken" TextArea accordingly...
+		ArrayList<Course> myCourses = new ArrayList<Course>();
+		for(int i = 0; i < whatIfStudent.getEnrollmentInfo().getTakenBag().getSize();i++){
+			myCourses.add(whatIfStudent.getEnrollmentInfo().getTakenBag().getCourse(i));
+		}
+		for(int i = 0; i < whatIfStudent.getEnrollmentInfo().getNeededBag().getSize();i++){
+			myCourses.add(whatIfStudent.getEnrollmentInfo().getNeededBag().getCourse(i));
+		}
+		whatIfStudent.getEnrollmentInfo().getTakenBag().removeAll();
+		whatIfStudent.getEnrollmentInfo().getNeededBag().removeAll();
+		
+		//Going through classes needed for major and checking to see if any of the courses taken by student
+		//are classes that are needed...
+		for(int i = 0; i < myCourses.size();i++){
+			for(int j = 0; j< whatIfStudent.getMajor().getMajorCoursesSize();j++){
+				if(myCourses.get(i).equals(whatIfStudent.getMajor().getMajorCourse(j))){
+					whatIfStudent.getEnrollmentInfo().getNeededBag().add(myCourses.get(i));
+					//myCourses.remove(i);
+				}
+			}
+			for(int j = 0; j< whatIfStudent.getMajor().getSocialSciencesSize();j++){
+				if(myCourses.get(i).equals(whatIfStudent.getMajor().getSSCourse(j))){
+					whatIfStudent.getEnrollmentInfo().getNeededBag().add(myCourses.get(i));
+					///myCourses.remove(i);
+				}
+			}
+			for(int j = 0; j< whatIfStudent.getMajor().getHumanitiesSize();j++){
+				if(myCourses.get(i).equals(whatIfStudent.getMajor().getHumanititesCourse(j))){
+					whatIfStudent.getEnrollmentInfo().getNeededBag().add(myCourses.get(i));
+					//myCourses.remove(i);
+				}
+			}
+			for(int j = 0; j< whatIfStudent.getMajor().getPhysEdCoursesSize();j++){
+				if(myCourses.get(i).equals(whatIfStudent.getMajor().getPhysEdCourse(j))){
+					whatIfStudent.getEnrollmentInfo().getNeededBag().add(myCourses.get(i));
+					//myCourses.remove(i);
+				}
+			}
+		}
+		//after checks if needed, the rest of the classes in 'myCourses' are put into 'Other Taken' category..
+		boolean otherTaken = true;
+		for(int q = 0; q < myCourses.size(); q++){
+			for(int j = 0; j < whatIfStudent.getEnrollmentInfo().getNeededBag().getSize();j++){
+				if(whatIfStudent.getEnrollmentInfo().getNeededBag().getCourse(j).equals(myCourses.get(q)))
+					otherTaken = false;
+			}
+			if(otherTaken)
+			whatIfStudent.getEnrollmentInfo().getTakenBag().add(myCourses.get(q));
+		}
+		
+	
+		facade.getSainScreen().setInfo(whatIfStudent);
+		facade.getWhatIfScreen().hide();
+		facade.getSainScreen().show();
+	}
+	
+	
 	public void addStudentClicked(){
 		boolean canContinue = true;
 		
