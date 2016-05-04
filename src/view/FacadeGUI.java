@@ -89,8 +89,28 @@ public class FacadeGUI {
 		sainScreen.hide();
 		sainEditScreen.show();
 		
+		sainEditScreen.hideGradeOption();
+		
 		sainEditScreen.addCourseButton.setOnAction(e->{
 			controller.addCourseClicked(thisStudent);
+		});
+		
+		sainEditScreen.backToSain.setOnAction(e3 ->{
+			controller.backToSainClicked();
+		});
+		
+		//Option to alter grade only appears if NOT a current course
+		sainEditScreen.notCurrentlyTaking.setOnAction(e1 ->{
+			sainEditScreen.showGradeOption();
+		});
+		sainEditScreen.currentlyTaking.setOnAction(e2 ->{
+			sainEditScreen.hideGradeOption();
+		});
+		
+		//switch between two edit screens:
+		sainEditScreen.addDisplayButton.setOnAction(e4 ->{
+			sainEditScreen.hide();
+			sainEditScreen.showRemovePage();
 		});
 	}
 	public void setSearchResults(String s){
@@ -170,6 +190,7 @@ public class FacadeGUI {
 	public SainEditPage getEditSainScreen(){
 		return sainEditScreen;
 	}
+
 	
 	public Pane getPane(){
 		return pane;
@@ -215,6 +236,22 @@ public class FacadeGUI {
 		}
 		
 
+		Stage popUpStage = new Stage();
+		view.makeDoesNotExistWindow(popUpStage,popUp1);
+	}
+	public void addedNewCourseWindow(){
+		if(popUpLabel.getText().equals("New Course has been added to student's SAIN") == false){
+			popUpLabel.setText("New Course has been added to student's SAIN");
+			popUp1.setRoot(popUpLabel);
+		}
+		Stage popUpStage = new Stage();
+		view.makeDoesNotExistWindow(popUpStage,popUp1);
+	}
+	public void courseAlreadyExistsWindow(){
+		if(popUpLabel.getText().equals("This course already exists in student's SAIN") == false){
+			popUpLabel.setText("This course already exists in student's SAIN");
+			popUp1.setRoot(popUpLabel);
+		}
 		Stage popUpStage = new Stage();
 		view.makeDoesNotExistWindow(popUpStage,popUp1);
 	}

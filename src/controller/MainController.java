@@ -373,6 +373,12 @@ public class MainController {
 		facade.getSainScreen().show();
 	}
 	
+	public void backToSainClicked(){
+		facade.getSainScreen().setInfo(searchedStudent);
+		facade.getEditSainScreen().hide();
+		facade.getSainScreen().show();
+	}
+	
 	
 	public void addStudentClicked(){
 		boolean canContinue = true;
@@ -413,7 +419,7 @@ public class MainController {
 	public void addCourseClicked(Student thisStudent){
 		String selectedCourse = facade.getEditSainScreen().getSelectedCourse();
 		boolean addedAllReady = false;
-		boolean courseAlreadyExists;
+		boolean courseAlreadyExists = false;
 		//-----------VVVV--------------- have to make check for if course exists already ------------------ VVVV -----------------------
 		
 		
@@ -421,65 +427,109 @@ public class MainController {
 			if(selectedCourse.equals(thisStudent.getEnrollmentInfo().getTakenBag().getCourse(k).getTitle() + " " + 
 				thisStudent.getEnrollmentInfo().getTakenBag().getCourse(k).getCourseNum() )){
 					courseAlreadyExists = true;
+					System.out.println("Already Exists");
+			}
+		}
+		for(int k = 0; k<thisStudent.getEnrollmentInfo().getNeededBag().getSize();k++){
+			if(selectedCourse.equals(thisStudent.getEnrollmentInfo().getNeededBag().getCourse(k).getTitle() + " " + 
+				thisStudent.getEnrollmentInfo().getNeededBag().getCourse(k).getCourseNum() )){
+					courseAlreadyExists = true;
+					System.out.println("Already Exists");
+			}
+		}
+		for(int k = 0; k<thisStudent.getEnrollmentInfo().getCurrentBag().getSize();k++){
+			if(selectedCourse.equals(thisStudent.getEnrollmentInfo().getCurrentBag().getCourse(k).getTitle() + " " + 
+				thisStudent.getEnrollmentInfo().getCurrentBag().getCourse(k).getCourseNum() )){
+					courseAlreadyExists = true;
+					System.out.println("Already Exists");
+			}
+		}
+		for(int k = 0; k<thisStudent.getEnrollmentInfo().getFailedBag().getSize();k++){
+			if(selectedCourse.equals(thisStudent.getEnrollmentInfo().getFailedBag().getCourse(k).getTitle() + " " + 
+				thisStudent.getEnrollmentInfo().getFailedBag().getCourse(k).getCourseNum() )){
+					courseAlreadyExists = true;
+					System.out.println("Already Exists");
 			}
 		}
 		
 		
-		
-		
 		//-------------------------------------------------------------------------------------------
-		for(int i = 0; i<courseBag.getSize();i++){
-			if(selectedCourse.equals(courseBag.getCourse(i).getTitle() + " " +courseBag.getCourse(i).getCourseNum())){
-				//added to current courses if selected
-				if(facade.getEditSainScreen().isCurrentCourseSelected()){
-					thisStudent.getEnrollmentInfo().getCurrentBag().add(courseBag.getCourse(i));
-				}
-				else{
-					//failed class:
-					if(facade.getEditSainScreen().getGrade().equals("F")){
-						thisStudent.getEnrollmentInfo().getFailedBag().add(courseBag.getCourse(i));
+		if(courseAlreadyExists == false){
+			for(int i = 0; i<courseBag.getSize();i++){
+				if(selectedCourse.equals(courseBag.getCourse(i).getTitle() + " " +courseBag.getCourse(i).getCourseNum())){
+					//added to current courses if selected
+					if(facade.getEditSainScreen().isCurrentCourseSelected()){
+						thisStudent.getEnrollmentInfo().getCurrentBag().add(courseBag.getCourse(i));
+						facade.addedNewCourseWindow();
+						System.out.println("Added to current");
 					}
 					else{
-						//Checks all the major bags to see if this newly added course belongs to the category
-						//of courses needed for this major...
-						
-						for(int j = 0; j <thisStudent.getMajor().getHumanitiesSize();j++){
-							if(courseBag.getCourse(i).equals(thisStudent.getMajor().getHumanititesCourse(j))){
-								thisStudent.getEnrollmentInfo().getNeededBag().add(courseBag.getCourse(i));
-								addedAllReady = true; // doesn't go through other bags if all ready found here...
-							}
+						//failed class:
+						if(facade.getEditSainScreen().getGrade().equals("F")){
+							thisStudent.getEnrollmentInfo().getFailedBag().add(courseBag.getCourse(i));
+							facade.addedNewCourseWindow();
+							System.out.println("Added to failed");
 						}
-						if(addedAllReady == false){
-							for(int j = 0; j <thisStudent.getMajor().getPhysEdCoursesSize();j++){
-								if(courseBag.getCourse(i).equals(thisStudent.getMajor().getPhysEdCourse(j))){
+						else{
+							//Checks all the major bags to see if this newly added course belongs to the category
+							//of courses needed for this major...
+							
+							for(int j = 0; j <thisStudent.getMajor().getHumanitiesSize();j++){
+								if(courseBag.getCourse(i).equals(thisStudent.getMajor().getHumanititesCourse(j))){
 									thisStudent.getEnrollmentInfo().getNeededBag().add(courseBag.getCourse(i));
+									thisStudent.getEnrollmentInfo().getNeededBag().getCourse(i).setGrade(facade.getEditSainScreen().getGrade());
 									addedAllReady = true; // doesn't go through other bags if all ready found here...
+									facade.addedNewCourseWindow();
+									System.out.println("Added to required");
 								}
 							}
-						}
-						if(addedAllReady == false){
-							for(int j = 0; j <thisStudent.getMajor().getSocialSciencesSize();j++){
-								if(courseBag.getCourse(i).equals(thisStudent.getMajor().getScienceCourse(j))){
-									thisStudent.getEnrollmentInfo().getNeededBag().add(courseBag.getCourse(i));
-									addedAllReady = true; // doesn't go through other bags if all ready found here...
+							if(addedAllReady == false && thisStudent.getMajor().getPhysEdCoursesSize() != 0 ){
+								for(int j = 0; j <thisStudent.getMajor().getPhysEdCoursesSize();j++){
+									if(courseBag.getCourse(i).equals(thisStudent.getMajor().getPhysEdCourse(j))){
+										thisStudent.getEnrollmentInfo().getNeededBag().add(courseBag.getCourse(i));
+										thisStudent.getEnrollmentInfo().getNeededBag().getCourse(i).setGrade(facade.getEditSainScreen().getGrade());
+										addedAllReady = true; // doesn't go through other bags if all ready found here...
+										facade.addedNewCourseWindow();
+										System.out.println("Added to required");
+									}
 								}
 							}
-						}
-						if(addedAllReady == false){
-							for(int j = 0; j <thisStudent.getMajor().getMathSize();j++){
-								if(courseBag.getCourse(i).equals(thisStudent.getMajor().getMathCourse(j))){
-									thisStudent.getEnrollmentInfo().getNeededBag().add(courseBag.getCourse(i));
-									addedAllReady = true;
+							if(addedAllReady == false && thisStudent.getMajor().getSocialSciencesSize() !=0 ){
+								System.out.println("ss size:" + thisStudent.getMajor().getSocialSciencesSize());
+								for(int j = 0; j <thisStudent.getMajor().getSocialSciencesSize();j++){
+									if(courseBag.getCourse(i).equals(thisStudent.getMajor().getSSCourse(j))){
+										thisStudent.getEnrollmentInfo().getNeededBag().add(courseBag.getCourse(i));
+										thisStudent.getEnrollmentInfo().getNeededBag().getCourse(i).setGrade(facade.getEditSainScreen().getGrade());
+										addedAllReady = true; // doesn't go through other bags if all ready found here...
+										facade.addedNewCourseWindow();
+										System.out.println("Added to required");
+									}
 								}
 							}
-						}
-						// finally, if it doesn't belong to any major bags, gets set to "Non required taken" section.
-						if(addedAllReady == false){
-							thisStudent.getEnrollmentInfo().getTakenBag().add(courseBag.getCourse(i));
+							if(addedAllReady == false && thisStudent.getMajor().getMathSize() != 0){
+								for(int j = 0; j <thisStudent.getMajor().getMathSize();j++){
+									if(courseBag.getCourse(i).equals(thisStudent.getMajor().getMathCourse(j))){
+										thisStudent.getEnrollmentInfo().getNeededBag().add(courseBag.getCourse(i));
+										thisStudent.getEnrollmentInfo().getNeededBag().getCourse(i).setGrade(facade.getEditSainScreen().getGrade());
+										addedAllReady = true;
+										facade.addedNewCourseWindow();
+										System.out.println("Added to required");
+									}
+								}
+							}
+							// finally, if it doesn't belong to any major bags, gets set to "Non required taken" section.
+							if(addedAllReady == false){
+								thisStudent.getEnrollmentInfo().getTakenBag().add(courseBag.getCourse(i));
+								thisStudent.getEnrollmentInfo().getTakenBag().getCourse(i).setGrade(facade.getEditSainScreen().getGrade());
+								facade.addedNewCourseWindow();
+								System.out.println("Added to other");
+							}
 						}
 					}
 				}
 			}
+		}else{
+			facade.courseAlreadyExistsWindow();
 		}
 	}
 	

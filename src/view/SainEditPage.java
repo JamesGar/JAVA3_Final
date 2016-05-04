@@ -18,10 +18,16 @@ public class SainEditPage {
 
 	
 	GridPane grid = new GridPane();
+	
+	Button addDisplayButton = new Button("Add Course page");
+	Button removeDisplayButton = new Button("Remove Course Page");
+	
+	//add courses page
 	ObservableList<String> courseOptions = FXCollections.observableArrayList();
-	ComboBox<String> currentCourseOptions;
+	ComboBox<String> allCourseOptions;
 	Label addTitle = new Label("Add new course");
 	Button addCourseButton = new Button("Add Course");
+	Button backToSain = new Button("Return to SAIN");
 	TextField startingGrade = new TextField();
 	Label startingGradeLB = new Label("Starting grade in this course:");
 	RadioButton currentlyTaking = new RadioButton("Yes");
@@ -29,10 +35,21 @@ public class SainEditPage {
 	Label currentlyTakingLB = new Label("Currently Taking This Course?");
 	ToggleGroup group = new ToggleGroup();
 	
+	//remove courses page
+	ObservableList<String> currentSainCourses = FXCollections.observableArrayList();
+	ComboBox<String> removeCourseOptions;
+	Label removeTitle = new Label("Remove Current Course");
+	Button removeButton = new Button("Remove this course");
+	
 	
 	public GridPane getMyGrid(Student thisStudent){
 		currentlyTaking.setToggleGroup(group);
 		grid.setVgap(10);
+		grid.setConstraints(addDisplayButton, 0, 0, 500, 5);
+		addDisplayButton.setPrefSize(500, 5);
+		
+		grid.add(addDisplayButton, 0, 0);
+		//grid.add(removeDisplayButton, 1, 1);
 		grid.add(addTitle, 2, 2);
 		
 		return grid;
@@ -44,16 +61,26 @@ public class SainEditPage {
 		for(int i = 0; i< courseBag.getSize(); i ++){
 			courseOptions.add(courseBag.getCourse(i).getTitle() + " " +courseBag.getCourse(i).getCourseNum());
 		}
-		currentCourseOptions = new ComboBox<String>(courseOptions);
+		allCourseOptions = new ComboBox<String>(courseOptions);
 	}
+	public void hideGradeOption(){
+		startingGrade.setVisible(false);
+		startingGradeLB.setVisible(false);
+	}
+	public void showGradeOption(){
+		startingGrade.setVisible(true);
+		startingGradeLB.setVisible(true);
+	}
+	
 	public void show(){
 		grid.add(addTitle, 2, 2);
-		grid.add(currentCourseOptions, 2, 4);
+		grid.add(allCourseOptions, 2, 4);
 		grid.add(addCourseButton, 3, 6);
 		grid.add(startingGrade, 5, 3);
 		grid.add(startingGradeLB, 4, 3);
 		grid.add(currentlyTaking, 5, 5);
 		grid.add(notCurrentlyTaking, 6, 5);
+		grid.add(backToSain, 3, 8);
 		currentlyTaking.setToggleGroup(group);
 		notCurrentlyTaking.setToggleGroup(group);
 		grid.add(currentlyTakingLB,4, 5);
@@ -61,16 +88,25 @@ public class SainEditPage {
 	public void hide(){
 		
 		grid.getChildren().remove(addTitle);
-		grid.getChildren().remove(currentCourseOptions);
+		grid.getChildren().remove(allCourseOptions);
 		grid.getChildren().remove(addCourseButton);
 		grid.getChildren().remove(startingGrade);
 		grid.getChildren().remove(startingGradeLB);
 		grid.getChildren().remove(currentlyTaking);
 		grid.getChildren().remove(currentlyTakingLB);
 		grid.getChildren().remove(notCurrentlyTaking);
+		grid.getChildren().remove(backToSain);
 	}
+	
+	public void showRemovePage(){
+		
+	}
+	public void hideRemovePage(){
+		
+	}
+	
 	public String getSelectedCourse(){
-		return currentCourseOptions.getValue();
+		return allCourseOptions.getValue();
 	}
 	public boolean isCurrentCourseSelected(){
 	
