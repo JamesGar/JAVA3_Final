@@ -201,5 +201,8 @@ public class CourseBag implements Bag{
 	public Course getCourse(int i){
 		return courseBag.get(i);
 	}
+	public int getSize(){
+		return courseBag.size();
+	}
 
 }

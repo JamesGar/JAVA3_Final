@@ -86,8 +86,12 @@ public class FacadeGUI {
 		//show extra buttons
 	}
 	public void setEditSainView(Student thisStudent){
-		pane.getChildren().clear();
-		pane.getChildren().add(sainEditScreen.getMyGrid(thisStudent));
+		sainScreen.hide();
+		sainEditScreen.show();
+		
+		sainEditScreen.addCourseButton.setOnAction(e->{
+			controller.addCourseClicked(thisStudent);
+		});
 	}
 	public void setSearchResults(String s){
 		searchScreen.results.setText(s);
@@ -99,7 +103,9 @@ public class FacadeGUI {
 		pane.getChildren().clear();
 		pane.getChildren().add(sainScreen.getMyGrid());
 		pane.getChildren().add(whatIfScreen.getMyGrid());
+		pane.getChildren().add(sainEditScreen.getMyGrid(forThisStudent));
 		
+		sainEditScreen.hide();
 		whatIfScreen.hide();
 
 			
@@ -160,6 +166,9 @@ public class FacadeGUI {
 	}
 	public SainDisplayScreen getSainScreen(){
 		return sainScreen;
+	}
+	public SainEditPage getEditSainScreen(){
+		return sainEditScreen;
 	}
 	
 	public Pane getPane(){

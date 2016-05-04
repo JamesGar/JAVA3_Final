@@ -293,6 +293,7 @@ public class MainController {
 	}
 	
 	public void updateSainClicked(){
+		facade.getEditSainScreen().addView(searchedStudent, courseBag);
 		facade.setEditSainView(searchedStudent);
 	}
 	public void addStudentViewClicked(){
@@ -405,6 +406,79 @@ public class MainController {
 				facade.createdNewStudentWindow(newStudent.getId());
 				facade.getAddStudentPage().hide();
 				facade.getSearchScreen().show();
+			}
+		}
+	}
+	
+	public void addCourseClicked(Student thisStudent){
+		String selectedCourse = facade.getEditSainScreen().getSelectedCourse();
+		boolean addedAllReady = false;
+		boolean courseAlreadyExists;
+		//-----------VVVV--------------- have to make check for if course exists already ------------------ VVVV -----------------------
+		
+		
+		for(int k = 0; k<thisStudent.getEnrollmentInfo().getTakenBag().getSize();k++){
+			if(selectedCourse.equals(thisStudent.getEnrollmentInfo().getTakenBag().getCourse(k).getTitle() + " " + 
+				thisStudent.getEnrollmentInfo().getTakenBag().getCourse(k).getCourseNum() )){
+					courseAlreadyExists = true;
+			}
+		}
+		
+		
+		
+		
+		//-------------------------------------------------------------------------------------------
+		for(int i = 0; i<courseBag.getSize();i++){
+			if(selectedCourse.equals(courseBag.getCourse(i).getTitle() + " " +courseBag.getCourse(i).getCourseNum())){
+				//added to current courses if selected
+				if(facade.getEditSainScreen().isCurrentCourseSelected()){
+					thisStudent.getEnrollmentInfo().getCurrentBag().add(courseBag.getCourse(i));
+				}
+				else{
+					//failed class:
+					if(facade.getEditSainScreen().getGrade().equals("F")){
+						thisStudent.getEnrollmentInfo().getFailedBag().add(courseBag.getCourse(i));
+					}
+					else{
+						//Checks all the major bags to see if this newly added course belongs to the category
+						//of courses needed for this major...
+						
+						for(int j = 0; j <thisStudent.getMajor().getHumanitiesSize();j++){
+							if(courseBag.getCourse(i).equals(thisStudent.getMajor().getHumanititesCourse(j))){
+								thisStudent.getEnrollmentInfo().getNeededBag().add(courseBag.getCourse(i));
+								addedAllReady = true; // doesn't go through other bags if all ready found here...
+							}
+						}
+						if(addedAllReady == false){
+							for(int j = 0; j <thisStudent.getMajor().getPhysEdCoursesSize();j++){
+								if(courseBag.getCourse(i).equals(thisStudent.getMajor().getPhysEdCourse(j))){
+									thisStudent.getEnrollmentInfo().getNeededBag().add(courseBag.getCourse(i));
+									addedAllReady = true; // doesn't go through other bags if all ready found here...
+								}
+							}
+						}
+						if(addedAllReady == false){
+							for(int j = 0; j <thisStudent.getMajor().getSocialSciencesSize();j++){
+								if(courseBag.getCourse(i).equals(thisStudent.getMajor().getScienceCourse(j))){
+									thisStudent.getEnrollmentInfo().getNeededBag().add(courseBag.getCourse(i));
+									addedAllReady = true; // doesn't go through other bags if all ready found here...
+								}
+							}
+						}
+						if(addedAllReady == false){
+							for(int j = 0; j <thisStudent.getMajor().getMathSize();j++){
+								if(courseBag.getCourse(i).equals(thisStudent.getMajor().getMathCourse(j))){
+									thisStudent.getEnrollmentInfo().getNeededBag().add(courseBag.getCourse(i));
+									addedAllReady = true;
+								}
+							}
+						}
+						// finally, if it doesn't belong to any major bags, gets set to "Non required taken" section.
+						if(addedAllReady == false){
+							thisStudent.getEnrollmentInfo().getTakenBag().add(courseBag.getCourse(i));
+						}
+					}
+				}
 			}
 		}
 	}
