@@ -130,15 +130,19 @@ public class SainDisplayScreen {
 		//------------------------------------------------------
 		myText = " ";
 		alreadyDone = false;
+		System.out.println(thisStudent.getEnrollmentInfo().getMyMajor().getMajorCoursesSize());
 		for(int i = 0; i< thisStudent.getEnrollmentInfo().getMyMajor().getMajorCoursesSize();i++){
+			System.out.println(thisStudent.getEnrollmentInfo().getMyMajor().getMajorCourse(i).toString());
 			for(int j = 0; j <thisStudent.getEnrollmentInfo().getNeededBag().getSize(); j++){
-				if(thisStudent.getEnrollmentInfo().getMyMajor().getMajorCourse(i).equals(thisStudent.getEnrollmentInfo().getNeededBag().getCourse(j))) 
+				if(thisStudent.getEnrollmentInfo().getMyMajor().getMajorCourse(i).equals(thisStudent.getEnrollmentInfo().getNeededBag().getCourse(j))) {
+					System.out.println(thisStudent.getEnrollmentInfo().getMyMajor().getMajorCourse(i).getTitle() + " = " + thisStudent.getEnrollmentInfo().getNeededBag().getCourse(j).getTitle());
 						alreadyDone = true;
+				}
 			}
-			for(int q = 0; q<thisStudent.getEnrollmentInfo().getCurrentBag().getSize(); q++){
-				if(thisStudent.getEnrollmentInfo().getMyMajor().getMajorCourse(i).equals(thisStudent.getEnrollmentInfo().getCurrentBag().getCourse(q))) 
-					alreadyDone = true;
-			}
+//			for(int q = 0; q<thisStudent.getEnrollmentInfo().getCurrentBag().getSize(); q++){
+//				if(thisStudent.getEnrollmentInfo().getMyMajor().getMajorCourse(i).equals(thisStudent.getEnrollmentInfo().getCurrentBag().getCourse(q))) 
+//					alreadyDone = true;
+//			}
 			if (alreadyDone == false)
 			myText = myText + ( thisStudent.getEnrollmentInfo().getMyMajor().getMajorCourse(i).toStringForNeeded() +  "\n");
 		}
@@ -194,6 +198,7 @@ public class SainDisplayScreen {
 	
 	
 	public GridPane getMyGrid(){
+		
 		//I read that preferred size was not the best option to use here... is this all right?
 		basicInfo.setPrefSize(100, 100);
 		basicInfo.setEditable(false);
@@ -235,7 +240,7 @@ public class SainDisplayScreen {
 		
 		
 		
-		grid.add(b1, 2, 2);
+		grid.add(b1, 43, 2);
 		grid.add(title, 24, 0);
 		
 		
@@ -286,6 +291,41 @@ public class SainDisplayScreen {
 		
 		
 		return grid;
+	}
+	
+	public void hide(){
+		grid.setVisible(false);
+//		basicInfo.setVisible(false);
+//		requiredCourses.setVisible(false);
+//		otherCourses.setVisible(false);
+//		failedCourses.setVisible(false);
+//		currentCourses.setVisible(false);
+//		PEcoursesNeeded.setVisible(false);
+//		majorCoursesNeeded.setVisible(false);
+//		scienceCoursesNeeded.setVisible(false);
+//		mathCoursesNeeded.setVisible(false);
+//		nonMajorCoursesNeeded.setVisible(false);
+//		programRequirements.setVisible(false);
+//		summary.setVisible(false);
+//		title.setVisible(false);
+//		basicInfoLB.setVisible(false);
+//		requiredCoursesLB.setVisible(false);
+//		otherCoursesLB.setVisible(false);
+//		failedCoursesLB.setVisible(false);
+//		coursesNeededLB.setVisible(false);
+//		PENeededLB.setVisible(false);
+//		majorNeededLB.setVisible(false);
+//		nonMajorNeededLB.setVisible(false);
+//		mathNeededLB.setVisible(false);
+//		scienceNeededLB.setVisible(false);
+//		currentCoursesLB.setVisible(false);
+//		programRequirementsLB.setVisible(false);
+//		b1 = new Button("What If");
+//		update = new Button("Update SAIN");
+			
+	}
+	public void show(){
+		grid.setVisible(true);
 	}
 
 

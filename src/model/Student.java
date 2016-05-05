@@ -16,6 +16,7 @@ public class Student extends User {
 	private double totalCredits;
 	private double majorCredits;
 	
+	
 	public Student(String firstName, String lastName, Address address,
 			String email, int id, Account account,String degreeType, String campus, MajorBag major,
 			double cumulativeGPA, double programGPA, Enrollment enrollment, int majorID) {

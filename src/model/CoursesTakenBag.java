@@ -23,6 +23,11 @@ public class CoursesTakenBag implements Bag {
 	public void remove(int i) {
 		takenBag.remove(i);
 	}
+	public void removeAll(){
+		for(int i = 0; i < takenBag.size();i++){
+			takenBag.remove(i);
+		}
+	}
 
 	@Override
 	public Object search(int i) {

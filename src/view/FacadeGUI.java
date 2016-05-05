@@ -17,6 +17,7 @@ public class FacadeGUI {
 	private SideOptions sideOptions = new SideOptions();
 	private SainEditPage sainEditScreen = new SainEditPage();
 	private AddStudentPage addStudentScreen = new AddStudentPage();
+	private WhatIfScreen whatIfScreen = new WhatIfScreen();
 	private Label popUpLabel = new Label();
 	Pane pane = new Pane();
 	Button continueButton;
@@ -85,17 +86,56 @@ public class FacadeGUI {
 		//show extra buttons
 	}
 	public void setEditSainView(Student thisStudent){
-		pane.getChildren().clear();
-		pane.getChildren().add(sainEditScreen.getMyGrid(thisStudent));
+		sainScreen.hide();
+		sainEditScreen.show();
+	//	sainEditScreen.setRemovableCourseOptions(thisStudent);
+		sainEditScreen.hideGradeOption();
+		
+		sainEditScreen.addCourseButton.setOnAction(e->{
+			controller.addCourseClicked(thisStudent);
+		});
+		sainEditScreen.removeButton.setOnAction(e ->{
+			controller.removeCourseClicked();
+		});
+		
+		sainEditScreen.backToSain.setOnAction(e3 ->{
+			controller.backToSainClicked();
+		});
+		
+		//Option to alter grade only appears if NOT a current course
+		sainEditScreen.notCurrentlyTaking.setOnAction(e1 ->{
+			sainEditScreen.showGradeOption();
+		});
+		sainEditScreen.currentlyTaking.setOnAction(e2 ->{
+			sainEditScreen.hideGradeOption();
+		});
+		
+		//switch between two edit screens:
+		sainEditScreen.addDisplayButton.setOnAction(e4 ->{
+			sainEditScreen.hideRemovePage();
+			sainEditScreen.show();	
+		});
+		sainEditScreen.removeDisplayButton.setOnAction(e5 ->{
+			sainEditScreen.hide();
+			sainEditScreen.showRemovePage();
+		});
 	}
 	public void setSearchResults(String s){
 		searchScreen.results.setText(s);
 		searchScreen.showViewSain();
 	}
 	public void setSainView(Student forThisStudent){
+		
 		sainScreen.setInfo(forThisStudent);
 		pane.getChildren().clear();
 		pane.getChildren().add(sainScreen.getMyGrid());
+		pane.getChildren().add(whatIfScreen.getMyGrid());
+		pane.getChildren().add(sainEditScreen.getMyGrid(forThisStudent));
+		
+		sainEditScreen.hide();
+		whatIfScreen.hide();
+
+			
 		//"Update" button visible if user is admin:
 		if(view.getStaffValue() == 2)
 			sainScreen.update.setVisible(true);
@@ -103,12 +143,22 @@ public class FacadeGUI {
 		sainScreen.update.setOnAction(e ->{
 			controller.updateSainClicked();
 		});
+		
+		sainScreen.b1.setOnAction(e ->{
+			controller.whatIfClicked();
+		});
 		view.setNewView(pane);
 	}
-	public void setAddStudentView(){
-		//searchScreen.getMyGrid().setVisible(false);
+	public void setWhatIfView(){
 		//pane.getChildren().clear();
-		//pane.getChildren().add(addStudentScreen.getMyGrid());
+		sainScreen.hide();
+		whatIfScreen.show();
+		
+		whatIfScreen.newSainButton.setOnAction(e ->{
+			controller.newSainButtonClicked();
+		});
+	}
+	public void setAddStudentView(){
 		searchScreen.hide();
 		addStudentScreen.show();
 		addStudentScreen.add.setOnAction(e ->{
@@ -138,6 +188,16 @@ public class FacadeGUI {
 	public SearchStudentScreen getSearchScreen(){
 		return searchScreen;
 	}
+	public WhatIfScreen getWhatIfScreen(){
+		return whatIfScreen;
+	}
+	public SainDisplayScreen getSainScreen(){
+		return sainScreen;
+	}
+	public SainEditPage getEditSainScreen(){
+		return sainEditScreen;
+	}
+
 	
 	public Pane getPane(){
 		return pane;
@@ -148,10 +208,12 @@ public class FacadeGUI {
 	}
 
 	public void makeDoesNotExistWindow(){
-		popUpLabel.setText("Could not find account");
-		Scene popUp = new Scene(popUpLabel,200,200);
+		if(popUp1.getRoot().equals("Could not find account") == false){
+			popUpLabel.setText("Could not find account");
+			popUp1.setRoot(popUpLabel);
+		}
 		Stage popUpStage = new Stage();
-		view.makeDoesNotExistWindow(popUpStage,popUp);
+		view.makeDoesNotExistWindow(popUpStage,popUp1);
 	}
 	public void makeWrongMajorInputWindow(){
 		if(popUp1.getRoot().equals("Not a valid input for Major ID") == false){
@@ -181,6 +243,30 @@ public class FacadeGUI {
 		}
 		
 
+		Stage popUpStage = new Stage();
+		view.makeDoesNotExistWindow(popUpStage,popUp1);
+	}
+	public void addedNewCourseWindow(){
+		if(popUpLabel.getText().equals("New Course has been added to student's SAIN") == false){
+			popUpLabel.setText("New Course has been added to student's SAIN");
+			popUp1.setRoot(popUpLabel);
+		}
+		Stage popUpStage = new Stage();
+		view.makeDoesNotExistWindow(popUpStage,popUp1);
+	}
+	public void courseAlreadyExistsWindow(){
+		if(popUpLabel.getText().equals("This course already exists in student's SAIN") == false){
+			popUpLabel.setText("This course already exists in student's SAIN");
+			popUp1.setRoot(popUpLabel);
+		}
+		Stage popUpStage = new Stage();
+		view.makeDoesNotExistWindow(popUpStage,popUp1);
+	}
+	public void courseRemovedWindow(){
+		if(popUpLabel.getText().equals("Course has been removed from student's SAIN") == false){
+			popUpLabel.setText("Course has been removed from student's SAIN");
+			popUp1.setRoot(popUpLabel);
+		}
 		Stage popUpStage = new Stage();
 		view.makeDoesNotExistWindow(popUpStage,popUp1);
 	}

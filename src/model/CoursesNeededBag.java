@@ -19,6 +19,10 @@ public class CoursesNeededBag implements Bag{
 	public void remove(int i) {
 		neededBag.remove(i);
 	}
+	public void removeAll(){
+		for(int i = 0; i < neededBag.size();i++)
+			neededBag.remove(i);
+	}
 
 	@Override
 	public Object search(int i) {
