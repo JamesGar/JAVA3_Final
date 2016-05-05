@@ -37,20 +37,20 @@ public class SainEditPage {
 	
 	//remove courses page
 	ObservableList<String> currentSainCourses = FXCollections.observableArrayList();
-	ComboBox<String> removeCourseOptions;
+	ComboBox<String> removeCourseOptions = new ComboBox<String>();;
 	Label removeTitle = new Label("Remove Current Course");
 	Button removeButton = new Button("Remove this course");
+	
 	
 	
 	public GridPane getMyGrid(Student thisStudent){
 		currentlyTaking.setToggleGroup(group);
 		grid.setVgap(10);
-		grid.setConstraints(addDisplayButton, 0, 0, 500, 5);
-		addDisplayButton.setPrefSize(500, 5);
 		
-		grid.add(addDisplayButton, 0, 0);
 		//grid.add(removeDisplayButton, 1, 1);
 		grid.add(addTitle, 2, 2);
+		
+		
 		
 		return grid;
 		
@@ -62,6 +62,25 @@ public class SainEditPage {
 			courseOptions.add(courseBag.getCourse(i).getTitle() + " " +courseBag.getCourse(i).getCourseNum());
 		}
 		allCourseOptions = new ComboBox<String>(courseOptions);
+	}
+	public void setRemovableCourseOptions(Student thisStudent){
+
+		//add all current sain courses to remove options
+		removeCourseOptions.getItems().removeAll(currentSainCourses);
+		currentSainCourses.remove(0, currentSainCourses.size());
+		for(int i = 0; i < thisStudent.getEnrollmentInfo().getFailedBag().getSize();i++){
+			currentSainCourses.add(thisStudent.getEnrollmentInfo().getFailedBag().getCourse(i).getTitle());
+		}
+		for(int i = 0; i< thisStudent.getEnrollmentInfo().getTakenBag().getSize();i++){
+			currentSainCourses.add(thisStudent.getEnrollmentInfo().getTakenBag().getCourse(i).getTitle());
+		}
+		for(int i = 0; i< thisStudent.getEnrollmentInfo().getNeededBag().getSize();i++){
+			currentSainCourses.add(thisStudent.getEnrollmentInfo().getNeededBag().getCourse(i).getTitle());
+		}
+		
+		removeCourseOptions.getItems().addAll(currentSainCourses);
+		removeCourseOptions.setValue(removeCourseOptions.getItems().get(1));
+		
 	}
 	public void hideGradeOption(){
 		startingGrade.setVisible(false);
@@ -84,6 +103,12 @@ public class SainEditPage {
 		currentlyTaking.setToggleGroup(group);
 		notCurrentlyTaking.setToggleGroup(group);
 		grid.add(currentlyTakingLB,4, 5);
+		//grid.setConstraints(addDisplayButton, 0, 0, 500, 5);
+		//addDisplayButton.setPrefSize(500, 5);
+		grid.add(addDisplayButton, 0, 0);
+		//grid.setConstraints(removeDisplayButton, 0, 50, 500, 5);
+		//removeDisplayButton.setPrefSize(500, 5);
+		grid.add(removeDisplayButton, 1, 0);
 	}
 	public void hide(){
 		
@@ -96,17 +121,39 @@ public class SainEditPage {
 		grid.getChildren().remove(currentlyTakingLB);
 		grid.getChildren().remove(notCurrentlyTaking);
 		grid.getChildren().remove(backToSain);
+		//still need to remove these V buttons because otherwise would show on SAIN
+		grid.getChildren().remove(removeDisplayButton);
+		grid.getChildren().remove(addDisplayButton);
 	}
 	
 	public void showRemovePage(){
-		
+		grid.add(removeTitle, 2, 2);
+		grid.add(removeCourseOptions, 2, 4);
+		grid.add(removeButton, 3, 6);
+		grid.add(backToSain, 3, 8);
+		////grid.setConstraints(addDisplayButton, 0, 0, 500, 5);
+		//addDisplayButton.setPrefSize(500, 5);
+		grid.add(addDisplayButton, 0, 0);
+		//grid.setConstraints(removeDisplayButton, 0, 50, 500, 5);
+		//removeDisplayButton.setPrefSize(500, 5);
+		grid.add(removeDisplayButton,1,0);
 	}
 	public void hideRemovePage(){
+		
+		grid.getChildren().remove(removeDisplayButton);
+		grid.getChildren().remove(addDisplayButton);
+		grid.getChildren().remove(removeTitle);
+		grid.getChildren().remove(removeCourseOptions);
+		grid.getChildren().remove(backToSain);
+		grid.getChildren().remove(removeButton);
 		
 	}
 	
 	public String getSelectedCourse(){
 		return allCourseOptions.getValue();
+	}
+	public String getSelectedRemoveCourse(){
+		return removeCourseOptions.getValue();
 	}
 	public boolean isCurrentCourseSelected(){
 	

@@ -1,5 +1,10 @@
 package controller;
 
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import model.Account;
@@ -27,6 +32,7 @@ public class MainController {
 	CourseBag courseBag = new CourseBag();
 	private Student whatIfStudent;
 	private Student searchedStudent;
+	File savedFile = new File("SavedData.dat");
 	
 	//may need to add view in brackets
 	public MainController(){
@@ -295,6 +301,7 @@ public class MainController {
 	public void updateSainClicked(){
 		facade.getEditSainScreen().addView(searchedStudent, courseBag);
 		facade.setEditSainView(searchedStudent);
+		facade.getEditSainScreen().setRemovableCourseOptions(searchedStudent);
 	}
 	public void addStudentViewClicked(){
 		facade.setAddStudentView();
@@ -376,6 +383,7 @@ public class MainController {
 	public void backToSainClicked(){
 		facade.getSainScreen().setInfo(searchedStudent);
 		facade.getEditSainScreen().hide();
+		facade.getEditSainScreen().hideRemovePage();
 		facade.getSainScreen().show();
 	}
 	
@@ -416,10 +424,42 @@ public class MainController {
 		}
 	}
 	
+	public void removeCourseClicked(){
+		String selectedCourse = facade.getEditSainScreen().getSelectedRemoveCourse();
+		
+		for(int i = 0; i< searchedStudent.getEnrollmentInfo().getTakenBag().getSize();i++){
+			if(selectedCourse.equals(searchedStudent.getEnrollmentInfo().getTakenBag().getCourse(i).getTitle())){
+				searchedStudent.getEnrollmentInfo().getTakenBag().remove(i);
+				//remove it from combobox too
+			}
+		}
+		for(int i = 0; i< searchedStudent.getEnrollmentInfo().getNeededBag().getSize();i++){
+			if(selectedCourse.equals(searchedStudent.getEnrollmentInfo().getNeededBag().getCourse(i).getTitle())){
+				searchedStudent.getEnrollmentInfo().getNeededBag().remove(i);
+				//remove it from combobox too
+			}
+		}
+		for(int i = 0; i< searchedStudent.getEnrollmentInfo().getFailedBag().getSize();i++){
+			if(selectedCourse.equals(searchedStudent.getEnrollmentInfo().getFailedBag().getCourse(i).getTitle())){
+				searchedStudent.getEnrollmentInfo().getFailedBag().remove(i);
+				//remove it from combobox too
+			}
+		}
+		
+		facade.getEditSainScreen().setRemovableCourseOptions(searchedStudent);
+		
+		facade.courseRemovedWindow();
+					
+					
+				
+		
+	}
+	
 	public void addCourseClicked(Student thisStudent){
 		String selectedCourse = facade.getEditSainScreen().getSelectedCourse();
 		boolean addedAllReady = false;
 		boolean courseAlreadyExists = false;
+		thisStudent = searchedStudent;
 		//-----------VVVV--------------- have to make check for if course exists already ------------------ VVVV -----------------------
 		
 		
@@ -519,8 +559,8 @@ public class MainController {
 							}
 							// finally, if it doesn't belong to any major bags, gets set to "Non required taken" section.
 							if(addedAllReady == false){
-								thisStudent.getEnrollmentInfo().getTakenBag().add(courseBag.getCourse(i));
-								thisStudent.getEnrollmentInfo().getTakenBag().getCourse(i).setGrade(facade.getEditSainScreen().getGrade());
+								searchedStudent.getEnrollmentInfo().getTakenBag().add(courseBag.getCourse(i));
+								searchedStudent.getEnrollmentInfo().getTakenBag().getCourse((searchedStudent.getEnrollmentInfo().getTakenBag().getSize()) - 1).setGrade(facade.getEditSainScreen().getGrade());
 								facade.addedNewCourseWindow();
 								System.out.println("Added to other");
 							}
@@ -535,6 +575,21 @@ public class MainController {
 	
 	public void setFacade(FacadeGUI f){
 		facade = f;
+	}
+	
+	public void writeSaveData(File file, StudentBag studentBag, StaffBag staffBag ){
+		
+		try (DataInputStream out = new DataInputStream(new FileInputStream(file))){
+			
+		}catch(FileNotFoundException e){
+			
+		}catch(IOException e1){
+			
+		}
+		
+	}
+	public void loadSaveData(){
+		
 	}
 
 }

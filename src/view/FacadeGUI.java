@@ -88,11 +88,14 @@ public class FacadeGUI {
 	public void setEditSainView(Student thisStudent){
 		sainScreen.hide();
 		sainEditScreen.show();
-		
+	//	sainEditScreen.setRemovableCourseOptions(thisStudent);
 		sainEditScreen.hideGradeOption();
 		
 		sainEditScreen.addCourseButton.setOnAction(e->{
 			controller.addCourseClicked(thisStudent);
+		});
+		sainEditScreen.removeButton.setOnAction(e ->{
+			controller.removeCourseClicked();
 		});
 		
 		sainEditScreen.backToSain.setOnAction(e3 ->{
@@ -109,6 +112,10 @@ public class FacadeGUI {
 		
 		//switch between two edit screens:
 		sainEditScreen.addDisplayButton.setOnAction(e4 ->{
+			sainEditScreen.hideRemovePage();
+			sainEditScreen.show();	
+		});
+		sainEditScreen.removeDisplayButton.setOnAction(e5 ->{
 			sainEditScreen.hide();
 			sainEditScreen.showRemovePage();
 		});
@@ -250,6 +257,14 @@ public class FacadeGUI {
 	public void courseAlreadyExistsWindow(){
 		if(popUpLabel.getText().equals("This course already exists in student's SAIN") == false){
 			popUpLabel.setText("This course already exists in student's SAIN");
+			popUp1.setRoot(popUpLabel);
+		}
+		Stage popUpStage = new Stage();
+		view.makeDoesNotExistWindow(popUpStage,popUp1);
+	}
+	public void courseRemovedWindow(){
+		if(popUpLabel.getText().equals("Course has been removed from student's SAIN") == false){
+			popUpLabel.setText("Course has been removed from student's SAIN");
 			popUp1.setRoot(popUpLabel);
 		}
 		Stage popUpStage = new Stage();
