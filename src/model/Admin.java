@@ -1,6 +1,8 @@
 package model;
 
-public class Admin extends User{
+import java.io.Serializable;
+
+public class Admin extends User implements Serializable{
 
 	public Admin(String firstName, String lastName, Address address,
 			String email, int id, Account account) {
@@ -14,6 +16,14 @@ public class Admin extends User{
 	
 	public void changePassword(String s){
 		getAccount().setPassword(s);;
+	}
+
+	@Override
+	public String toString() {
+		return "Admin [firstName=" + firstName + ", lastName=" + lastName
+				+ ", address=" + address + ", email=" + email + ", id=" + id
+				+ ", account=" + account + "]"+ "Username:" + account.getUsername() +
+				"password: " + account.getPassword();
 	}
 	
 

@@ -21,6 +21,11 @@ public class StudentBag implements Bag{
 	public void remove(int i) {
 		studentList.remove(i);
 	}
+	public void removeAll(){
+		for(int i = 0; i<studentList.size();i++){
+			studentList.remove(i);
+		}
+	}
 	public Student getStudent(int i){
 		return studentList.get(i);
 	}

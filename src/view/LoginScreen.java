@@ -14,6 +14,8 @@ public class LoginScreen {
 	TextField username = new TextField();
 	TextField password = new TextField();
 	SideOptions sideOptions = new SideOptions();
+	Button loadData = new Button("Load data");
+	Button saveData = new Button("Save Data");
 
 
 	public LoginScreen(){
@@ -31,6 +33,8 @@ public class LoginScreen {
 		grid.add(username, 2, 2);
 		grid.add(password,4,2);
 		grid.add(b1, 3, 5);
+		grid.add(loadData, 5, 7);
+		grid.add(saveData, 2, 7);
 		//grid.add(sideOptions.getSidePane(), 10, 0);
 		return grid;
 	}

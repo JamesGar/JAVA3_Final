@@ -1,6 +1,8 @@
 package model;
 
-public class Enrollment {
+import java.io.Serializable;
+
+public class Enrollment implements Serializable{
 	
 	//course bags? for now...
 	CoursesFailedBag failedBag;

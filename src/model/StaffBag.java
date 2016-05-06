@@ -38,5 +38,18 @@ public class StaffBag implements Bag{
 		//if return 0, then go to student bag to search for account
 		return accountValue;
 	}
+	
+	public int getSize(){
+		return staffList.size();
+	}
+	
+	public User getStaff(int i){
+		return staffList.get(i);
+	}
+	public void removeAll(){
+		for(int i = 0; i<staffList.size();i++){
+			staffList.remove(i);
+		}
+	}
 
 }

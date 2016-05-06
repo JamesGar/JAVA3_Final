@@ -1,6 +1,8 @@
 package model;
 
-public class Faculty extends User {
+import java.io.Serializable;
+
+public class Faculty extends User implements Serializable {
 	
 	private double salary;
 	
@@ -20,6 +22,18 @@ public class Faculty extends User {
 	public void setSalary(double salary) {
 		this.salary = salary;
 	}
+
+
+	@Override
+	public String toString() {
+		return "Faculty [salary=" + salary + ", firstName=" + firstName
+				+ ", lastName=" + lastName + ", address=" + address
+				+ ", email=" + email + ", id=" + id + ", account=" + account
+				+ "]" + "Username:" + account.getUsername() + "password: " + account.getPassword();
+	}
+
+
+	
 	
 	
 

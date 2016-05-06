@@ -1,6 +1,8 @@
 package model;
 
-public class Student extends User {
+import java.io.Serializable;
+
+public class Student extends User implements Serializable{
 	
 
 	
@@ -102,8 +104,8 @@ public class Student extends User {
 	public String toString() {
 		return  "Student name:" + firstName + "Student [degreeType=" + degreeType + ", campus=" + campus
 				+ ", major=" + major + ", majorID=" + majorID
-				+ ", cumulativeGPA=" + cumulativeGPA + ", programGPA="
-				+ programGPA + ", advisor=" + advisor + ", enrollmentInfo="
+				+ ", cumulativeGPA=" + cumulativeGPA + ", password ="
+				+ account.getPassword() + ", username =" + account.getUsername() + ", enrollmentInfo="
 				+ enrollmentInfo + "]";
 	}
 	

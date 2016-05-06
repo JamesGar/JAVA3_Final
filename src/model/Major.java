@@ -1,8 +1,9 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Major {
+public class Major implements Serializable{
 	
 	private String myMajor;
 	private double majorGPA;

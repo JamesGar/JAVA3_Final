@@ -1,6 +1,8 @@
 package model;
 
-public interface Bag {
+import java.io.Serializable;
+
+public interface Bag extends Serializable{
 	
 	public void add(Object obj);
 	

@@ -41,6 +41,13 @@ public class FacadeGUI {
 			controller.loginClicked(loginScreen.getUserName(), loginScreen.getPassword());
 		});
 		
+		loginScreen.saveData.setOnAction(e->{
+			controller.saveClicked();
+		});
+		loginScreen.loadData.setOnAction(e->{
+			controller.loadClicked();
+		});
+		
 		view.setNewView(pane);
 	}
 	

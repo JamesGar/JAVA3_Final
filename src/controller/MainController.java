@@ -1,10 +1,12 @@
 package controller;
 
-import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import model.Account;
@@ -14,11 +16,13 @@ import model.Course;
 import model.CourseBag;
 import model.Enrollment;
 import model.Faculty;
+import model.LoginDataStore;
 import model.Major;
 import model.MajorBag;
 import model.StaffBag;
 import model.Student;
 import model.StudentBag;
+import model.User;
 import view.FacadeGUI;
 import view.MainView;
 
@@ -26,13 +30,15 @@ public class MainController {
 	
 	StaffBag staffBag;
 	StudentBag studentBag;
+	//LoginDataStore loginBag = new LoginDataStore();
     MainView view;
 	FacadeGUI facade;
 	MajorBag majorBag = new MajorBag();
 	CourseBag courseBag = new CourseBag();
 	private Student whatIfStudent;
 	private Student searchedStudent;
-	File savedFile = new File("SavedData.dat");
+	File savedFile = new File("SavedStudentData.dat");
+	File staffSavedFile = new File("SavedStaffData.dat");
 	
 	//may need to add view in brackets
 	public MainController(){
@@ -572,23 +578,85 @@ public class MainController {
 			facade.courseAlreadyExistsWindow();
 		}
 	}
+	public void saveClicked(){
+		writeSaveStudentData(savedFile,studentBag);
+		writeSaveStaffData(staffSavedFile,staffBag);
+	}
+	public void loadClicked(){
+		loadSavedStudentData(savedFile);
+		loadSavedStaffData(staffSavedFile);
+	}
 	
 	public void setFacade(FacadeGUI f){
 		facade = f;
 	}
 	
-	public void writeSaveData(File file, StudentBag studentBag, StaffBag staffBag ){
+	public void writeSaveStudentData(File file, StudentBag studentBag){
 		
-		try (DataInputStream out = new DataInputStream(new FileInputStream(file))){
+		try(ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));){
+			out.writeObject(studentBag);
+			out.close();
+			System.out.println("Saved successfully");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	public void writeSaveStaffData(File staffFile, StaffBag staffBag){
+	
+		try(ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(staffFile));){
+		
+			out.writeObject(staffBag);
 			
+			out.close();
+			System.out.println("Staff Saved successfully");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public void loadSavedStudentData(File file){
+		
+		try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(file));){
+			try {
+				studentBag = (StudentBag) in.readObject();
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
 		}catch(FileNotFoundException e){
 			
 		}catch(IOException e1){
 			
 		}
+		System.out.println("Loaded proper");
+		for(int i = 0; i<studentBag.getSize();i++){
+			System.out.println(studentBag.getStudent(i).toString());
+		}
 		
 	}
-	public void loadSaveData(){
+	public void loadSavedStaffData(File staffFile){
+		try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(staffFile));){
+			try {
+				staffBag = (StaffBag) in.readObject();
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}catch(FileNotFoundException e){
+			
+		}catch(IOException e1){
+			
+		}
+		System.out.println("Loaded Staff proper");
 		
 	}
 
